@@ -15,17 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path,include
-from django.conf import settings
-from django.conf.urls.static import static
-from AppRambutanGuard.views import home
+from django.urls import path
+from AppRambutanGuard.views import RegisterEmpleadoView, EliminarEmpleadoView
 
 
 urlpatterns = [
-    path("admin/", admin.site.urls), #Ruta para acceder al panel de admin
-    path('', home, name='home'), #Casa predefinida
-    path('app/', include('AppRambutanGuard.urls')), #Se agregan las rutas de urls.py de AppRambutanGuard
-
+    path('crear-empleado/',RegisterEmpleadoView.as_view(), name='crear_empleado'), #Ruta para crear empleado
+    path('eliminar-empleado/<str:nombre>/<str:apellido>/', EliminarEmpleadoView.as_view(), name='eliminar_empleado'),#Ruta para eliminar emplaedo en base a su nombre
 ]
-if settings.DEBUG: #Checa si esta en modo debug
-    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) #Agrega las rutas para servir archivos de media
