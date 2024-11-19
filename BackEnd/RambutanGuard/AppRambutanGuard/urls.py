@@ -16,11 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from AppRambutanGuard.views import RegisterEmpleadoView, EliminarEmpleadoView, ValidarAsistenciaView
+from AppRambutanGuard.views import RegisterEmpleadoView, EliminarEmpleadoView, ValidarAsistenciaView, ListarEmpleadosView,ObtenerHorariosView,ObtenerPuestosView
 
 
 urlpatterns = [
     path('crear-empleado/',RegisterEmpleadoView.as_view(), name='crear_empleado'), #Ruta para crear empleado
     path('eliminar-empleado/<str:nombre>/<str:apellido>/', EliminarEmpleadoView.as_view(), name='eliminar_empleado'),#Ruta para eliminar emplaedo en base a su nombre
-    path('validar-asistencia/', ValidarAsistenciaView.as_view(), name='validar-asistencia')
+    path('validar-asistencia/', ValidarAsistenciaView.as_view(), name='validar-asistencia'),
+    path('listar-empleados/', ListarEmpleadosView.as_view(), name='listar_empleados'), #Ruta para listar empleados
+    path('get-puestos/', ObtenerPuestosView.as_view(), name='get-puestos'), #Ruta para obtener puestos
+    path('get-horarios/', ObtenerHorariosView.as_view(), name='get-horarios'), #Ruta para obtener horarios
+
 ]
