@@ -6,7 +6,7 @@ from .serializers import RegisterEmpleadoSerializer
 from django.http import HttpResponse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-from .models import Empleado, Reporte_Mensual
+from .models import Empleado
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -14,7 +14,7 @@ from .reconocimientoService import verificar_rostro_empleado
 import base64
 from io import BytesIO
 from PIL import Image
-
+from random import randint
 
 #Método para registrar empleado
 #Ejemplo JSON esperado:
@@ -102,31 +102,24 @@ class ValidarAsistenciaView(View):
 class DisplayService(View):
     def get(self, request, *args, **kwargs): #Funcion para obtener los datos y crear el JSON
         #Query para obtener todos los reportes
-        reports = Reporte_Mensual.objects.all()
-        response_data = {
-            "reports": []
-        }
+        empleados = Empleado.objects.all()
         
-        for report in reports:
-            #Obtener los datos asociados a cada empleado del reporte
-            empleados_data = Empleado.objects.filter(report=report)
-            empleados_list = []
-
-            for empleado_data in empleados_data:
-                empleados_list.append({
-                    "id": empleado_data.empleado.id,
-                    "nombre": f"{empleado_data.empleado.nombre_Empleado} {empleado_data.empleado.apellidos}",
-                    "asistencias": empleado_data.asistencias,
-                    "ausencias": empleado_data.ausencias,
-                    "tardanzas": empleado_data.tardanzas,
-                    "horasExtras": empleado_data.horas_extras,
-                })
-
-            #Generar el objeto de la respuesta
-            response_data["reports"].append({
-                "id": report.id,
-                "nombre": report.nombre,
-                "empleados": empleados_list,
-            })
+        reports = [
+            {
+                "id": 1,
+                "nombre": "Reporte Noviembre 2024",
+                "empleados": [
+                    {
+                        "id": empleado.id,
+                        "nombre": f"{empleado.nombre_Empleado} {empleado.apellidos}",
+                        "asistencias": randint(1, 25),
+                        "ausencias": randint(1, 25),
+                        "tardanzas": randint(1, 25),
+                        "horasExtras": randint(1, 25)
+                    }
+                    for empleado in empleados
+                ]
+            }
+        ]
         
-        return JsonResponse(response_data, status=200, safe=False)
+        return JsonResponse({"reports": reports}, status=200)
